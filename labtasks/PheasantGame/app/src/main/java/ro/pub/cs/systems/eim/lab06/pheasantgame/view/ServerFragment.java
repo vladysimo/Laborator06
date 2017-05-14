@@ -2,6 +2,7 @@ package ro.pub.cs.systems.eim.lab06.pheasantgame.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ public class ServerFragment extends Fragment {
     private TextView serverHistoryTextView;
 
     private ServerThread serverThread;
+    private Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle state) {
@@ -27,7 +29,8 @@ public class ServerFragment extends Fragment {
 
         serverHistoryTextView = (TextView)getActivity().findViewById(R.id.server_history_text_view);
 
-        serverThread = new ServerThread(serverHistoryTextView);
+        handler = new Handler();
+        serverThread = new ServerThread(serverHistoryTextView, handler);
         serverThread.start();
     }
 

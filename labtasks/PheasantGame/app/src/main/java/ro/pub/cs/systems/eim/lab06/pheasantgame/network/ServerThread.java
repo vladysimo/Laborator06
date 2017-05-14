@@ -1,5 +1,6 @@
 package ro.pub.cs.systems.eim.lab06.pheasantgame.network;
 
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -15,11 +16,13 @@ public class ServerThread extends Thread {
     private boolean isRunning;
 
     private ServerSocket serverSocket;
+    private Handler handler;
 
     private TextView serverHistoryTextView;
 
-    public ServerThread(TextView serverHistoryTextView) {
+    public ServerThread(TextView serverHistoryTextView, Handler handler) {
         this.serverHistoryTextView = serverHistoryTextView;
+        this.handler = handler;
         try {
             Log.d(Constants.TAG, "[SERVER] Created server thread, listening on port " + Constants.SERVER_PORT);
             serverSocket = new ServerSocket(Constants.SERVER_PORT);
@@ -51,7 +54,7 @@ public class ServerThread extends Thread {
                 }
             }
             if (socket != null) {
-                ServerCommunicationThread serverCommunicationThread = new ServerCommunicationThread(socket, serverHistoryTextView);
+                ServerCommunicationThread serverCommunicationThread = new ServerCommunicationThread(socket, serverHistoryTextView, handler);
                 serverCommunicationThread.start();
             }
         }
