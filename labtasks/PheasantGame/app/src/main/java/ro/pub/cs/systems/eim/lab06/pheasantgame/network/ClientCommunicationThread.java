@@ -60,6 +60,48 @@ public class ClientCommunicationThread extends Thread {
             PrintWriter requestPrintWriter = Utilities.getWriter(socket);
 
             // TODO exercise 7b
+            final String sent = wordEditText.getText().toString();
+            if (sent.length() >= 2) {
+                System.out.println("[CLIENT] trimite " + sent);
+                requestPrintWriter.println(sent);
+            }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    clientHistoryTextView.setText(clientHistoryTextView.getText().toString() + "Client sent " + sent + "\n");
+                }
+            }, 100);
+
+            final String received = responseReader.readLine();
+            System.out.println("[CLIENT] primeste " + received);
+            if (received == null) {
+                return;
+            }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    clientHistoryTextView.setText(clientHistoryTextView.getText().toString() + "Client received " + received + "\n");
+                }
+            }, 100);
+
+            if (received.equals(Constants.END_GAME)) {
+                wordEditText.invalidate();
+                sendButton.invalidate();
+            }
+
+            final String prefix;
+            if (!sent.equals(received)) {
+                prefix = received.substring(received.length() - 2, received.length());
+            }
+            else {
+                prefix = sent.substring(sent.length() - 2, sent.length());
+            }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    wordEditText.setText(prefix);
+                }
+            }, 100);
 
         } catch (IOException ioException) {
             Log.e(Constants.TAG, "An exception has occurred: " + ioException.getMessage());
